@@ -26,7 +26,7 @@ git clone https://github.com/your-username/tech-store.git
 
 Create a `.env` file and add the following variables:
 ```
-MONGO_URI=your_mongo_database_uri
+MONGO_URL=your_mongo_database_url
 PORT=5000
 ```
 
