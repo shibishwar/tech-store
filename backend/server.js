@@ -1,31 +1,36 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import path from 'path';
-import { connectDB } from './config/db.js';
-import productRoutes from './routes/product.route.js'
+import express from "express";
+import dotenv from "dotenv";
+import path from "path";
+import { connectDB } from "./config/db.js";
+import productRoutes from "./routes/product.route.js";
 
-dotenv.config(); // Initialize dotenv to read environment variables from the .env file
+dotenv.config();
 
-const app = express(); // Initialize Express application
+// Create an Express application instance
+const app = express();
 
-const PORT = process.env.PORT || 5000 // Set the port, default to 5000 if not provided in environment variables
+// Use port from environment or default to 5000
+const PORT = process.env.PORT || 5000;
 
-const __dirname = path.resolve(); // Resolve the absolute path of the current directory
+// Get absolute path to the current directory
+const __dirname = path.resolve();
 
-app.use(express.json()); // Middleware to parse incoming JSON requests
+// Middleware to parse JSON request bodies
+app.use(express.json());
 
-app.use("/api/products", productRoutes); // Use productRoutes for all API calls starting with /api/products
+// Mount product-related routes at /api/products
+app.use("/api/products", productRoutes);
 
-// Check if the environment is production
-if(process.env.NODE_ENV === 'production'){
-    app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// Serve frontend assets and handle routing in production
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "frontend", "dist")));
     app.get("*", (req, res) => {
         res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-    })
+    });
 }
 
-// Start the server and connect to the database
+// Start server and establish database connection
 app.listen(PORT, () => {
     connectDB();
-    console.log(`Server started at http://localhost:` + PORT);
+    console.log(`Server started at http://localhost:${PORT}`);
 });
